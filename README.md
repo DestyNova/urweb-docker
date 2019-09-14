@@ -1,4 +1,4 @@
-This repo holds the Dockerfile used to create the base image available at [Docker hub](https://hub.docker.com/r/destynova/urweb) for building Ur/web apps.
+This repo holds the Dockerfile used to create the base image available at [Docker hub](https://hub.docker.com/r/destynova/urweb) for building [Ur/web](http://www.impredicative.com/ur/) apps.
 
 You can use it in your own Dockerfiles by extending the base image, like this:
 
