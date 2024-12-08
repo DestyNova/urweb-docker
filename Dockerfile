@@ -1,27 +1,33 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 MAINTAINER Oisín Mac Fhearaí
 
-ENV COMPILER=/opt/urweb
-ENV COMPILER_SRC=/opt/urweb-src
+ARG URWEB_COMMIT=master
+ARG COMPILER=/opt/urweb
+ARG COMPILER_SRC=/opt/urweb-src
 
 RUN mkdir -p $COMPILER $COMPILER_SRC
 WORKDIR $COMPILER_SRC
 
-# get dependencies
+# Select a timezone to stop tzdata hanging the build. Change this as needed.
+ENV TZ=Europe/Dublin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+# Get dependencies
 RUN apt-get update -yqq && apt-get install -yqq build-essential wget mlton libssl-dev libpq-dev libmysqlclient-dev libicu-dev git autoconf libtool mime-support libsqlite3-dev
 
-# get Ur/Web from master
+# Get Ur/Web from master
 RUN git clone https://github.com/urweb/urweb.git urweb
 
-# build Ur/Web from recent safe commit and install in prefix
+# Build Ur/Web from either master or named commit and install in prefix
 RUN cd urweb && \
-    git checkout b506e44ebbf80d98bb1a39d5566e7cdf53b3fc78 && \
+    git checkout $URWEB_COMMIT && \
     ./autogen.sh && \
     ./configure --prefix=$COMPILER && \
     make && \
     make install
 
-# clean up
+# Clean up
 RUN rm -r ${COMPILER_SRC}
 
 ENV URWEB_HOME=${COMPILER}

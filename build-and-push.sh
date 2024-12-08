@@ -2,7 +2,7 @@
 
 set -eu
 
-VERSION=$1
+VERSION_TAG=$1
 IMAGE_TAG=destynova/urweb:$VERSION_TAG
 
 docker build -t $IMAGE_TAG .
